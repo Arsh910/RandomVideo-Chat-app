@@ -2,7 +2,7 @@
 
 For a detailed walkthrough of how this application was built, check out my story on Medium:
 
-**[Building a Random Video Chat Web App with WebRTC, WebSocket, and Django](https://medium.com/@arshdeeppalial/building-a-random-video-chat-web-app-withwebrtc-websocket-and-django-3c2653ab75af)**
+**[How to Build a Random Video Chat Web app withWebrtc ,Websocket and Django.](https://medium.com/@arshdeeppalial/building-a-random-video-chat-web-app-withwebrtc-websocket-and-django-3c2653ab75af)**
 
 Follow these steps to set up the project:
 
