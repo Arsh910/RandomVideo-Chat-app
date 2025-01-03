@@ -1,33 +1,96 @@
-# RandomVideo-Chat-app
+# RandomVideo-Chat-App
 
-Run the followring commands 
+Follow these steps to set up the project:
 
-Create a virtual environment  : python -m venv random-video-chat-app
-Clone the files (in repo not repo filder ) : git clone 
+---
 
-Activate the virtual env : random-video-chat-app/Scripts/activate
-Go into folder random-video-chat-app : cd random-video-chat-app
+## Backend Setup (Django)
 
-Install the python modules : pip install -r requirements.txt
-Make migrations : python manage.py makemigrations
-Migrate : python manage.py migrate 
+1. **Create a Virtual Environment**  
+   ```bash
+   python -m venv random-video-chat-app
+   ```
 
-There is some issue with JWT so run the following commands for that 
-pip uninstall PyJWT
-pip install "PyJWT>=2,<3"
-pip install -U djangorestframework-simplejwt
+2. **Clone the Repository**  
+   Clone the project files **inside the virtual environment folder (not the folder itself)**:  
+   ```bash
+   git clone <repository-url>
+   ```
 
-Runserver : python manage.py runserver
+3. **Activate the Virtual Environment**  
+   On Windows:  
+   ```bash
+   random-video-chat-app\Scripts\activate
+   ```  
+   On macOS/Linux:  
+   ```bash
+   source random-video-chat-app/bin/activate
+   ```
 
-Make sure it is running on this 
-http://127.0.0.1:8000/
+4. **Navigate to the Backend Folder**  
+   ```bash
+   cd random-video-chat-app
+   ```
 
+5. **Install Python Dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-In another terminal 
+6. **Database Setup**  
+   - Make migrations:  
+     ```bash
+     python manage.py makemigrations
+     ```  
+   - Apply migrations:  
+     ```bash
+     python manage.py migrate
+     ```
 
-Go into folder react-chat-app : cd react-chat-app 
-Install the node modules : npm i 
-Start the app : npm start 
+7. **Fix JWT Dependency Issue** (if necessary)  
+   If you encounter issues with JWT, run these commands:  
+   ```bash
+   pip uninstall PyJWT
+   pip install "PyJWT>=2,<3"
+   pip install -U djangorestframework-simplejwt
+   ```
 
-Make sure it is running on this 
-http://127.0.0.1:3000/
+8. **Run the Django Server**  
+   ```bash
+   python manage.py runserver
+   ```  
+   Make sure it is running on:  
+   [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+---
+
+## Frontend Setup (React)
+
+1. **Open a New Terminal**  
+   Leave the Django server running in the first terminal.
+
+2. **Navigate to the React App Folder**  
+   ```bash
+   cd react-chat-app
+   ```
+
+3. **Install Node Modules**  
+   ```bash
+   npm install
+   ```
+
+4. **Start the React App**  
+   ```bash
+   npm start
+   ```  
+   Make sure it is running on:  
+   [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
+
+---
+
+## Final Notes
+
+- Ensure the backend is running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/) before starting the frontend.  
+- Open both the Django server and React app in different terminals.  
+- For any issues, check the error logs in the respective terminal.
+
