@@ -1,0 +1,9 @@
+.card {
+    height: fit-content;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 70px;
+    border-radius: 20px;
+  }
+  
