@@ -97,4 +97,5 @@ Follow these steps to set up the project:
 - Ensure the backend is running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/) before starting the frontend.  
 - Open both the Django server and React app in different terminals.  
 - For any issues, check the error logs in the respective terminal.
+- The design of front end react-app is taken from https://github.com/DulanjaliSenarathna/react-chat-app
 
