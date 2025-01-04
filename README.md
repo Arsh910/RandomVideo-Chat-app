@@ -16,7 +16,7 @@ Follow these steps to set up the project:
    ```
 
 2. **Clone the Repository**  
-   Clone the project files **inside the virtual environment folder (not the folder itself)**:  
+   Clone the project files **inside the virtual environment folder**:  
    ```bash
    git clone <repository-url>
    ```
@@ -34,6 +34,7 @@ Follow these steps to set up the project:
 4. **Navigate to the Backend Folder**  
    ```bash
    cd random-video-chat-app
+   cd backend
    ```
 
 5. **Install Python Dependencies**  
