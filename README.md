@@ -73,7 +73,7 @@ Follow these steps to set up the project:
 1. **Open a New Terminal**  
    Leave the Django server running in the first terminal.
 
-2. **Navigate to the React App Folder**  
+2. **Navigate to the React App Folder in the virtual env**  
    ```bash
    cd react-chat-app
    ```
