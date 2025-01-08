@@ -158,7 +158,9 @@ function RandomVideo({ user }) {
   }
 
   async function handle_answer(answer) {
-    await peerConnection.setRemoteDescription(answer);
+    if(peerConnection){
+      await peerConnection.setRemoteDescription(answer);
+    }
   }
 
   function OnIceCandidateFunc(e) {
