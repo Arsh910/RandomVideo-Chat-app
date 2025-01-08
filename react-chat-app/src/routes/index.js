@@ -26,7 +26,7 @@ export default function Router() {
   
   useEffect(() => {
     axios
-      .get(`http://${LINK}/`, {
+      .get(`https://${LINK}/`, {
         headers: {
           Authorization: localStorage.getItem("access_token")
             ? "JWT " + localStorage.getItem("access_token")
