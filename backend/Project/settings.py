@@ -68,20 +68,18 @@ SITE_ID = 1
 
 CORS_ALLOW_CREDENTIALS = True
 
-LOGIN_REDIRECT_URL = 'http://localhost:3000/app'
-LOGOUT_REDIRECT_URL = 'http://localhost:3000/'
+LOGIN_REDIRECT_URL = 'https://noto-chats.onrender.com'
+LOGOUT_REDIRECT_URL = 'https://noto-chats.onrender.com/'
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://172.16.164.36:3000",
-    "http://192.168.1.6:3000"
+    "https://noto-chats.onrender.com"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://172.16.164.36:3000",
-    "http://192.168.1.6:3000"
+    "https://noto-chats.onrender.com"
 ]
 
 MIDDLEWARE = [
