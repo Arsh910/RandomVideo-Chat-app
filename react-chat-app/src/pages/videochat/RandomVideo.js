@@ -102,12 +102,12 @@ function RandomVideo({ user }) {
   };
 
   async function create_peerconnection() {
-    const peerCon = new RTCPeerConnection(peerConfiguration);
+    const peerCon = await new RTCPeerConnection(peerConfiguration);
     peerCon.ontrack = OnTrackFunc;
     peerCon.onicecandidate = OnIceCandidateFunc;
 
-    localStream.getTracks().forEach((track) => {
-      await peerCon.addTrack(track, localStream);
+    await localStream.getTracks().forEach((track) => {
+       peerCon.addTrack(track, localStream);
     });
 
     return peerCon;
