@@ -35,7 +35,7 @@ function RandomVideo({ user }) {
   }
 
   const connect_socket = (token) => {
-    const wss = new WebSocket(`ws://${LINK}/video_chat/?token=${token}`);
+    const wss = new WebSocket(`wss://${LINK}/video_chat/?token=${token}`);
     wss.onopen = () => {
       console.log("you are connected , just hit call");
     };
