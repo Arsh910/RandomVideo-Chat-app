@@ -15,7 +15,6 @@ let localStream = null;
 let remoteStream = null;
 let my_interval = null;
 let ws = null;
-let iceCandidatesBuffer = [];
 
 function RandomVideo({ user }) {
   const localVideoEl = useRef(null);
@@ -102,13 +101,13 @@ function RandomVideo({ user }) {
     ],
   };
 
-  function create_peerconnection() {
+  async function create_peerconnection() {
     const peerCon = new RTCPeerConnection(peerConfiguration);
     peerCon.ontrack = OnTrackFunc;
     peerCon.onicecandidate = OnIceCandidateFunc;
 
     localStream.getTracks().forEach((track) => {
-      peerCon.addTrack(track, localStream);
+      await peerCon.addTrack(track, localStream);
     });
 
     return peerCon;
@@ -228,12 +227,9 @@ function RandomVideo({ user }) {
         }
         if (data.typeof === "ice_candidate") {
             if (check_match(data)) {
-              if(peerConnection){
                 handle_ice(data.candidate, peerConnection);
-              }
-              else if(peerConnection2){ 
                 handle_ice(data.candidate, peerConnection2);
-              }
+            }
         }
         if (data.typeof === "endcall") {
             if (check_match(data)) {
