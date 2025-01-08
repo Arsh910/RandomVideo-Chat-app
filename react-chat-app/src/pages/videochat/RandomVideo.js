@@ -193,8 +193,10 @@ function RandomVideo({ user }) {
 
   function handle_ice(ice, peerCon) {
     if (peerCon) {
-      // console.log("adding icecandidates");
-      peerCon.addIceCandidate(ice).catch((error) => {
+      console.log(`adding icecandidates ${ice} on peer ${peerCon}`);
+      
+      peerCon.addIceCandidate(ice)
+      .catch((error) => {
         console.error("Error adding ICE candidate:");
       });
     }
