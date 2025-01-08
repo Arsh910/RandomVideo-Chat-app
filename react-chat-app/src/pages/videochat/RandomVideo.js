@@ -5,6 +5,8 @@ import {Box,IconButton,} from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import { PhoneCall ,  PhoneDisconnect , Chat} from "phosphor-react";
 
+const LINK = process.env.REACT_APP_LINK_IP
+
 let calling_clicked = false;
 let other = null;
 let peerConnection = null;
@@ -33,7 +35,7 @@ function RandomVideo({ user }) {
   }
 
   const connect_socket = (token) => {
-    const wss = new WebSocket(`ws://127.0.0.1:8000/video_chat/?token=${token}`);
+    const wss = new WebSocket(`ws://${LINK}/video_chat/?token=${token}`);
     wss.onopen = () => {
       console.log("you are connected , just hit call");
     };
