@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 const getPath = (index) =>{
   switch (index) {
     case 0:
-      return '/random_video'
+      return '/'
 
     default:
       break;
