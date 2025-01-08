@@ -229,8 +229,12 @@ function RandomVideo({ user }) {
         }
         if (data.typeof === "ice_candidate") {
             if (check_match(data)) {
+               if(peerConnection){
                 handle_ice(data.candidate, peerConnection);
+              }
+              else if(peerConnection2){
                 handle_ice(data.candidate, peerConnection2);
+              }
             }
         }
         if (data.typeof === "endcall") {
