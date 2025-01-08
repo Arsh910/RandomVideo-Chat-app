@@ -57,7 +57,7 @@ const RegisterForm = () => {
         console.log(response);
         localStorage.setItem("access_token", response.data.token.access);
         localStorage.setItem("refresh_token", response.data.token.refresh);
-        window.location.href = "/app";
+        window.location.href = "/random_video";
       })
       .catch((errors) => {
         console.log(errors);
