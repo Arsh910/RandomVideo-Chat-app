@@ -49,7 +49,7 @@ const LoginForm = () => {
         console.log(response);
         localStorage.setItem("access_token", response.data.token.access);
         localStorage.setItem("refresh_token", response.data.token.refresh);
-        window.location.href = "/random_video";
+        window.location.href = "/";
       })
       .catch((errors) => {
         console.log(errors);
