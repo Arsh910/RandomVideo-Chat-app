@@ -41,7 +41,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     const k = toast.loading("please wait");
     axios
-      .post(`http://${LINK}/logi_n/`, {
+      .post(`https://${LINK}/logi_n/`, {
         email: data.email,
         password: data.password,
       })
