@@ -7,7 +7,7 @@ import Logo from '../../assets/Images/logo.ico'
 const MainLayout = ({isAuthenticated}) => {
 
   if(isAuthenticated){
-    return <Navigate to='/random_video'/>;
+    return <Navigate to='/'/>;
   }
 
   return (
