@@ -15,6 +15,7 @@ let localStream = null;
 let remoteStream = null;
 let my_interval = null;
 let ws = null;
+let iceCandidatesBuffer = [];
 
 function RandomVideo({ user }) {
   const localVideoEl = useRef(null);
@@ -157,8 +158,8 @@ function RandomVideo({ user }) {
     }
   }
 
-  function handle_answer(answer) {
-    peerConnection.setRemoteDescription(answer);
+  async function handle_answer(answer) {
+    await peerConnection.setRemoteDescription(answer);
   }
 
   function OnIceCandidateFunc(e) {
@@ -227,9 +228,12 @@ function RandomVideo({ user }) {
         }
         if (data.typeof === "ice_candidate") {
             if (check_match(data)) {
-            handle_ice(data.candidate, peerConnection);
-            handle_ice(data.candidate, peerConnection2);
-            }
+              if(peerConnection){
+                handle_ice(data.candidate, peerConnection);
+              }
+              else if(peerConnection2){ 
+                handle_ice(data.candidate, peerConnection2);
+              }
         }
         if (data.typeof === "endcall") {
             if (check_match(data)) {
