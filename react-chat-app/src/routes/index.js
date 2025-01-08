@@ -61,7 +61,7 @@ export default function Router() {
       path: "/",
       element: <DashboardLayout user={user} />,
       children: [
-        { path: "random_video", element: <RandomVideoPage user={user} /> },
+        { path: "/", element: <RandomVideoPage user={user} /> },
         { path: "404", element: <Page404 /> },
       ],
     },
