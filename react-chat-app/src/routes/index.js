@@ -11,6 +11,8 @@ import MainLayout from "../layouts/main";
 import LoadingScreen from "../components/LoadingScreen";
 //import Settings from "../pages/dashboard/Settings";
 
+const LINK = process.env.REACT_APP_LINK_IP
+
 const Loadable = (Component) => (props) => {
   return (
     <Suspense fallback={<LoadingScreen />}>
@@ -24,7 +26,7 @@ export default function Router() {
   
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/`, {
+      .get(`http://${LINK}/`, {
         headers: {
           Authorization: localStorage.getItem("access_token")
             ? "JWT " + localStorage.getItem("access_token")
