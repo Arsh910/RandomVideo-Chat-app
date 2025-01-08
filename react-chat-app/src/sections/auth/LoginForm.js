@@ -17,6 +17,8 @@ import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const LINK = process.env.REACT_APP_LINK_IP
+
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   //validation rules
@@ -39,7 +41,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     const k = toast.loading("please wait");
     axios
-      .post(`http://127.0.0.1:8000/logi_n/`, {
+      .post(`http://${LINK}/logi_n/`, {
         email: data.email,
         password: data.password,
       })
