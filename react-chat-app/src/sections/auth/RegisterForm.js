@@ -15,6 +15,7 @@ import { Eye, EyeSlash } from "phosphor-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const LINK = process.env.REACT_APP_LINK_IP
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,7 +47,7 @@ const RegisterForm = () => {
     const k = toast.loading("please wait");
     if(data.password === data.password2){
     axios
-      .post(`http://127.0.0.1:8000/signup/`, {
+      .post(`http://${LINK}/signup/`, {
         email: data.email,
         password: data.password,
         password2: data.password2,
@@ -81,7 +82,7 @@ const RegisterForm = () => {
   useEffect(()=>{
     if(user_name){
       if(user_name.length>5){
-        axios.post(`http://127.0.0.1:8000/exists/`,{
+        axios.post(`http://${LINK}/exists/`,{
           username : user_name,
           email : null
         })
@@ -106,7 +107,7 @@ const RegisterForm = () => {
 
   useEffect(()=>{
     if(user_email && user_email.includes("@")){
-        axios.post(`http://127.0.0.1:8000/exists/`,{
+        axios.post(`http://${LINK}/exists/`,{
           username : null,
           email : user_email
         })
