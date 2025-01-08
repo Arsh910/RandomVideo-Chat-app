@@ -47,7 +47,7 @@ const RegisterForm = () => {
     const k = toast.loading("please wait");
     if(data.password === data.password2){
     axios
-      .post(`http://${LINK}/signup/`, {
+      .post(`https://${LINK}/signup/`, {
         email: data.email,
         password: data.password,
         password2: data.password2,
@@ -82,7 +82,7 @@ const RegisterForm = () => {
   useEffect(()=>{
     if(user_name){
       if(user_name.length>5){
-        axios.post(`http://${LINK}/exists/`,{
+        axios.post(`https://${LINK}/exists/`,{
           username : user_name,
           email : null
         })
@@ -107,7 +107,7 @@ const RegisterForm = () => {
 
   useEffect(()=>{
     if(user_email && user_email.includes("@")){
-        axios.post(`http://${LINK}/exists/`,{
+        axios.post(`https://${LINK}/exists/`,{
           username : null,
           email : user_email
         })
