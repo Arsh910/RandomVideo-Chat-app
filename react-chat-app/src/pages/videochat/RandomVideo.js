@@ -103,6 +103,11 @@ function RandomVideo({ user }) {
 
   async function create_peerconnection() {
     const peerCon = await new RTCPeerConnection(peerConfiguration);
+
+    peerConn.onsignalingstatechange = () => {
+        console.log("Signaling state changed to:", peerConn.signalingState);
+    };
+    
     peerCon.ontrack = OnTrackFunc;
     peerCon.onicecandidate = OnIceCandidateFunc;
 
@@ -158,9 +163,31 @@ function RandomVideo({ user }) {
   }
 
   async function handle_answer(answer) {
-    if(peerConnection){
-      await peerConnection.setRemoteDescription(answer);
+    if (!peerConnection) {
+        console.error("PeerConnection is not initialized.");
+        return;
     }
+
+    if (isAnswerSet) {
+        console.warn("Answer already set. Ignoring duplicate answer.");
+        return;
+    }
+
+    // Check if signalingState is 'have-local-offer' before proceeding
+    if (peerConnection.signalingState !== "have-local-offer") {
+        console.warn("Invalid signaling state:", peerConnection.signalingState);
+        console.warn("Expected state: 'have-local-offer'. Ignoring answer.");
+        return;
+    }
+
+    try {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        isAnswerSet = true; // Mark answer as set
+        console.log("Remote description set successfully.");
+    } catch (error) {
+        console.error("Failed to set remote description:", error);
+    }
+    
   }
 
   function OnIceCandidateFunc(e) {
