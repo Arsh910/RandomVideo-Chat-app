@@ -185,6 +185,9 @@ function RandomVideo({ user }) {
         await peerConnection.setRemoteDescription(answer);
         isAnswerSet = true; // Mark answer as set
         console.log("Remote description set successfully.");
+
+        await processQueuedIceCandidates(peerConnection);
+      
     } catch (error) {
         console.error("Failed to set remote description:", error);
     }
@@ -221,16 +224,62 @@ function RandomVideo({ user }) {
     }
   }
 
-  function handle_ice(ice, peerCon) {
-    if (peerCon) {
-      console.log(`adding icecandidates ${ice} on peer ${peerCon}`);
+  // async function handle_ice(ice, peerCon) {
+  //   if (peerCon) {
+  //     console.log(`adding icecandidates ${ice} on peer ${peerCon}`);
       
-      peerCon.addIceCandidate(ice)
-      .catch((error) => {
-        console.error("Error adding ICE candidate:");
-      });
+  //     await peerCon.addIceCandidate(ice)
+  //     .catch((error) => {
+  //       console.error("Error adding ICE candidate:");
+  //     });
+  //   }
+  // }
+
+  // Handle ICE candidates
+async function handle_ice(ice, peerCon) {
+    if (!peerCon) {
+        console.error("PeerConnection is not initialized.");
+        return;
     }
-  }
+
+    // Check if the remote description has been set before adding ICE candidates
+    if (!peerCon.remoteDescription || !peerCon.remoteDescription.type) {
+        console.warn("Remote description is not set yet. Storing ICE candidate for later.");
+        // Store the ICE candidate for later (use a queue)
+        if (!peerCon.iceCandidateQueue) {
+            peerCon.iceCandidateQueue = [];
+        }
+        peerCon.iceCandidateQueue.push(ice);
+        return;
+    }
+
+    try {
+        console.log(`Adding ICE candidate: ${JSON.stringify(ice)}`);
+        await peerCon.addIceCandidate(ice);
+        console.log("ICE candidate added successfully.");
+    } catch (error) {
+        console.error("Error adding ICE candidate:", error);
+    }
+}
+
+// Process queued ICE candidates after setting the remote description
+async function processQueuedIceCandidates(peerCon) {
+    if (!peerCon.iceCandidateQueue || peerCon.iceCandidateQueue.length === 0) {
+        console.log("No queued ICE candidates to process.");
+        return;
+    }
+
+    console.log("Processing queued ICE candidates...");
+    while (peerCon.iceCandidateQueue.length > 0) {
+        const ice = peerCon.iceCandidateQueue.shift();
+        try {
+            await peerCon.addIceCandidate(ice);
+            console.log("Queued ICE candidate added successfully.");
+        } catch (error) {
+            console.error("Error adding queued ICE candidate:", error);
+        }
+    }
+}
 
   // recieving from socket
   function setrecieve_event(){
