@@ -104,8 +104,8 @@ function RandomVideo({ user }) {
   async function create_peerconnection() {
     const peerCon = await new RTCPeerConnection(peerConfiguration);
 
-    peerConn.onsignalingstatechange = () => {
-        console.log("Signaling state changed to:", peerConn.signalingState);
+    peerCon.onsignalingstatechange = () => {
+        console.log("Signaling state changed to:", peerCon.signalingState);
     };
     
     peerCon.ontrack = OnTrackFunc;
@@ -165,11 +165,6 @@ function RandomVideo({ user }) {
   async function handle_answer(answer) {
     if (!peerConnection) {
         console.error("PeerConnection is not initialized.");
-        return;
-    }
-
-    if (isAnswerSet) {
-        console.warn("Answer already set. Ignoring duplicate answer.");
         return;
     }
 
