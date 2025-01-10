@@ -182,7 +182,7 @@ function RandomVideo({ user }) {
     }
 
     try {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        await peerConnection.setRemoteDescription(answer);
         isAnswerSet = true; // Mark answer as set
         console.log("Remote description set successfully.");
     } catch (error) {
