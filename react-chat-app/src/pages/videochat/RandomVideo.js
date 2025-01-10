@@ -15,6 +15,7 @@ let localStream = null;
 let remoteStream = null;
 let my_interval = null;
 let ws = null;
+let isAnswerSet = false;
 
 function RandomVideo({ user }) {
   const localVideoEl = useRef(null);
@@ -165,6 +166,11 @@ function RandomVideo({ user }) {
   async function handle_answer(answer) {
     if (!peerConnection) {
         console.error("PeerConnection is not initialized.");
+        return;
+    }
+
+    if (isAnswerSet) {
+        console.warn("Answer already set. Ignoring duplicate answer.");
         return;
     }
 
