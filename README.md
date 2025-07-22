@@ -99,4 +99,4 @@ Follow these steps to set up the project:
 - Open both the Django server and React app in different terminals.  
 - For any issues, check the error logs in the respective terminal.
 - Frontend react-app https://github.com/DulanjaliSenarathna/react-chat-app
-
+- The system have some timeing issues and deployment , i will fix it if got time to do so in future
