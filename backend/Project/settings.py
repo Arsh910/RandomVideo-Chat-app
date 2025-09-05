@@ -75,13 +75,15 @@ LOGOUT_REDIRECT_URL = 'https://notochats.onrender.com/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://notochats.onrender.com",
-    "https://random-video-chat-app.vercel.app"
+    "https://random-video-chat-app.vercel.app",
+    "https://random-video-chat-5prdl43d2-arsh910s-projects.vercel.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "https://notochats.onrender.com",
-    "https://random-video-chat-app.vercel.app"
+    "https://random-video-chat-app.vercel.app",
+    "https://random-video-chat-5prdl43d2-arsh910s-projects.vercel.app"
 ]
 
 MIDDLEWARE = [
