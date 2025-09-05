@@ -15,7 +15,6 @@ let localStream = null;
 let remoteStream = null;
 let my_interval = null;
 let ws = null;
-let isAnswerSet = false;
 
 function RandomVideo({ user }) {
   const localVideoEl = useRef(null);
@@ -36,7 +35,7 @@ function RandomVideo({ user }) {
   }
 
   const connect_socket = (token) => {
-    const wss = new WebSocket(`wss://${LINK}/video_chat/?token=${token}`);
+    const wss = new WebSocket(`ws://${LINK}/video_chat/?token=${token}`);
     wss.onopen = () => {
       console.log("you are connected , just hit call");
     };
@@ -102,18 +101,13 @@ function RandomVideo({ user }) {
     ],
   };
 
-  async function create_peerconnection() {
-    const peerCon = await new RTCPeerConnection(peerConfiguration);
-
-    peerCon.onsignalingstatechange = () => {
-        console.log("Signaling state changed to:", peerCon.signalingState);
-    };
-    
+  function create_peerconnection() {
+    const peerCon = new RTCPeerConnection(peerConfiguration);
     peerCon.ontrack = OnTrackFunc;
     peerCon.onicecandidate = OnIceCandidateFunc;
 
-    await localStream.getTracks().forEach((track) => {
-       peerCon.addTrack(track, localStream);
+    localStream.getTracks().forEach((track) => {
+      peerCon.addTrack(track, localStream);
     });
 
     return peerCon;
@@ -125,7 +119,7 @@ function RandomVideo({ user }) {
       clearInterval(my_interval);
       peerConnection = await create_peerconnection();
       const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
+      peerConnection.setLocalDescription(offer);
       ws.send(
         JSON.stringify({
           typeof: "offer",
@@ -145,9 +139,9 @@ function RandomVideo({ user }) {
         clearInterval(my_interval);
         peerConnection2 = await create_peerconnection();
         // console.log("creating answer...");
-        await peerConnection2.setRemoteDescription(offer);
+        peerConnection2.setRemoteDescription(offer);
         const answer = await peerConnection2.createAnswer({});
-        await peerConnection2.setLocalDescription(answer);
+        peerConnection2.setLocalDescription(answer);
 
         ws.send(
           JSON.stringify({
@@ -163,35 +157,8 @@ function RandomVideo({ user }) {
     }
   }
 
-  async function handle_answer(answer) {
-    if (!peerConnection) {
-        console.error("PeerConnection is not initialized.");
-        return;
-    }
-
-    if (isAnswerSet) {
-        console.warn("Answer already set. Ignoring duplicate answer.");
-        return;
-    }
-
-    // Check if signalingState is 'have-local-offer' before proceeding
-    if (peerConnection.signalingState !== "have-local-offer") {
-        console.warn("Invalid signaling state:", peerConnection.signalingState);
-        console.warn("Expected state: 'have-local-offer'. Ignoring answer.");
-        return;
-    }
-
-    try {
-        await peerConnection.setRemoteDescription(answer);
-        isAnswerSet = true; // Mark answer as set
-        console.log("Remote description set successfully.");
-
-        await processQueuedIceCandidates(peerConnection);
-      
-    } catch (error) {
-        console.error("Failed to set remote description:", error);
-    }
-    
+  function handle_answer(answer) {
+    peerConnection.setRemoteDescription(answer);
   }
 
   function OnIceCandidateFunc(e) {
@@ -224,62 +191,14 @@ function RandomVideo({ user }) {
     }
   }
 
-  // async function handle_ice(ice, peerCon) {
-  //   if (peerCon) {
-  //     console.log(`adding icecandidates ${ice} on peer ${peerCon}`);
-      
-  //     await peerCon.addIceCandidate(ice)
-  //     .catch((error) => {
-  //       console.error("Error adding ICE candidate:");
-  //     });
-  //   }
-  // }
-
-  // Handle ICE candidates
-async function handle_ice(ice, peerCon) {
-    if (!peerCon) {
-        console.error("PeerConnection is not initialized.");
-        return;
+  function handle_ice(ice, peerCon) {
+    if (peerCon) {
+      // console.log("adding icecandidates");
+      peerCon.addIceCandidate(ice).catch((error) => {
+        console.error("Error adding ICE candidate:");
+      });
     }
-
-    // Check if the remote description has been set before adding ICE candidates
-    if (!peerCon.remoteDescription || !peerCon.remoteDescription.type) {
-        console.warn("Remote description is not set yet. Storing ICE candidate for later.");
-        // Store the ICE candidate for later (use a queue)
-        if (!peerCon.iceCandidateQueue) {
-            peerCon.iceCandidateQueue = [];
-        }
-        peerCon.iceCandidateQueue.push(ice);
-        return;
-    }
-
-    try {
-        console.log(`Adding ICE candidate: ${JSON.stringify(ice)}`);
-        await peerCon.addIceCandidate(ice);
-        console.log("ICE candidate added successfully.");
-    } catch (error) {
-        console.error("Error adding ICE candidate:", error);
-    }
-}
-
-// Process queued ICE candidates after setting the remote description
-async function processQueuedIceCandidates(peerCon) {
-    if (!peerCon.iceCandidateQueue || peerCon.iceCandidateQueue.length === 0) {
-        console.log("No queued ICE candidates to process.");
-        return;
-    }
-
-    console.log("Processing queued ICE candidates...");
-    while (peerCon.iceCandidateQueue.length > 0) {
-        const ice = peerCon.iceCandidateQueue.shift();
-        try {
-            await peerCon.addIceCandidate(ice);
-            console.log("Queued ICE candidate added successfully.");
-        } catch (error) {
-            console.error("Error adding queued ICE candidate:", error);
-        }
-    }
-}
+  }
 
   // recieving from socket
   function setrecieve_event(){
@@ -308,12 +227,8 @@ async function processQueuedIceCandidates(peerCon) {
         }
         if (data.typeof === "ice_candidate") {
             if (check_match(data)) {
-               if(peerConnection){
-                handle_ice(data.candidate, peerConnection);
-              }
-              else if(peerConnection2){
-                handle_ice(data.candidate, peerConnection2);
-              }
+            handle_ice(data.candidate, peerConnection);
+            handle_ice(data.candidate, peerConnection2);
             }
         }
         if (data.typeof === "endcall") {
@@ -419,7 +334,7 @@ async function processQueuedIceCandidates(peerCon) {
     <Box>
 
     <div style={{           
-        width: isMobile? "90vw" : "95vw",
+        width: isMobile? "90vw" : "94vw",
         height: "fit-content",
         display: isMobile? "block" : "flex",
         margin:"60px 0 0 0",
