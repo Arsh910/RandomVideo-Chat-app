@@ -98,6 +98,11 @@ function RandomVideo({ user }) {
       {
         urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"],
       },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      }
     ],
   };
 
@@ -119,7 +124,7 @@ function RandomVideo({ user }) {
       clearInterval(my_interval);
       peerConnection = await create_peerconnection();
       const offer = await peerConnection.createOffer();
-      peerConnection.setLocalDescription(offer);
+      await peerConnection.setLocalDescription(offer);
       ws.send(
         JSON.stringify({
           typeof: "offer",
@@ -139,9 +144,9 @@ function RandomVideo({ user }) {
         clearInterval(my_interval);
         peerConnection2 = await create_peerconnection();
         // console.log("creating answer...");
-        peerConnection2.setRemoteDescription(offer);
+        await peerConnection2.setRemoteDescription(offer);
         const answer = await peerConnection2.createAnswer({});
-        peerConnection2.setLocalDescription(answer);
+        await peerConnection2.setLocalDescription(answer);
 
         ws.send(
           JSON.stringify({
