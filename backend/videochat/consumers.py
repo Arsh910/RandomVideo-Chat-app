@@ -94,6 +94,7 @@ class VideoChatConsumers(WebsocketConsumer):
         if typeof == "check_match":
             user_data = {'id' : self.user.id, 'prof_image':f'{self.user.prof_image}'}
             other_user = exchange_data_dict.get('other_user')
+            session_id = exchange_data_dict.get('sessionId')
             
             other = get_object_or_404(Profile,id=other_user)
             other_user = {'id' : other.id, 'prof_image':f'{other.prof_image}'}
@@ -104,6 +105,7 @@ class VideoChatConsumers(WebsocketConsumer):
                     'typeof':typeof,
                     'user_data' : user_data,
                     'other_user' : other_user,
+                    'sessionId': session_id,
             }
                 
             async_to_sync(self.channel_layer.group_send)(
@@ -115,12 +117,14 @@ class VideoChatConsumers(WebsocketConsumer):
             to_user = exchange_data_dict.get('to')
             from_user = exchange_data_dict.get('from')
             offer = exchange_data_dict.get('offer')
+            session_id = exchange_data_dict.get('sessionId')
             event = {
                     'type' : 'offer_handler',
                     'typeof':typeof,
                     'to' : to_user,
                     'from' : from_user,
-                    'offer':offer
+                    'offer':offer,
+                    'sessionId': session_id,
             }   
             async_to_sync(self.channel_layer.group_send)(
                     self.room_name,event
@@ -131,12 +135,14 @@ class VideoChatConsumers(WebsocketConsumer):
             to_user = exchange_data_dict.get('to')
             from_user = exchange_data_dict.get('from')
             answer = exchange_data_dict.get('answer')
+            session_id = exchange_data_dict.get('sessionId')
             event = {
                     'type' : 'answer_handler',
                     'typeof':typeof,
                     'to' : to_user,
                     'from' : from_user,
-                    'answer':answer 
+                    'answer':answer,
+                    'sessionId': session_id,
             }   
             async_to_sync(self.channel_layer.group_send)(
                     self.room_name,event
@@ -147,12 +153,16 @@ class VideoChatConsumers(WebsocketConsumer):
             to_user = exchange_data_dict.get('to')
             from_user = exchange_data_dict.get('from')
             candidate = exchange_data_dict.get('candidate')
+            session_id = exchange_data_dict.get('sessionId')
+            role = exchange_data_dict.get('role')  # 'offerer' or 'answerer'
             event = {
                     'type' : 'ice_handler',
                     'typeof':typeof,
                     'to' : to_user,
                     'from' : from_user,
-                    'candidate':candidate
+                    'candidate':candidate,
+                    'sessionId': session_id,
+                    'role': role,
             }   
             async_to_sync(self.channel_layer.group_send)(
                     self.room_name,event
@@ -162,83 +172,62 @@ class VideoChatConsumers(WebsocketConsumer):
 
             to_user = exchange_data_dict.get('to')
             from_user = exchange_data_dict.get('from')
+            session_id = exchange_data_dict.get('sessionId')
             event = {
                     'type' : 'endcall_handler',
                     'typeof':typeof,
                     'to' : to_user,
                     'from' : from_user,
+                    'sessionId': session_id,
             }   
             async_to_sync(self.channel_layer.group_send)(
                     self.room_name,event
             )
 
 
-    def video_mess_handler(self,event):
-        typeof = event['typeof']
-        user_data = event['user_data']
-        other_user = event['other_user']
+    def video_mess_handler(self, event):
+        self.send(json.dumps({
+            'typeof': event['typeof'],
+            'user_data': event['user_data'],
+            'other_user': event['other_user'],
+            'sessionId': event.get('sessionId'),
+        }))
 
-        self.send(
-            json.dumps({
-                'typeof' : typeof,
-                'user_data' : user_data,
-                'other_user' : other_user,
-            })
-        )
-    
-    def offer_handler(self , event):
-        typeof = event['typeof']
-        from_user = event['from']
-        to_user = event['to']
-        offer = event['offer']
-        self.send(
-            json.dumps({
-                'typeof':typeof,
-                'from':from_user,
-                'to':to_user,
-                'offer':offer
-            })
-        )
+    def offer_handler(self, event):
+        self.send(json.dumps({
+            'typeof': event['typeof'],
+            'from': event['from'],
+            'to': event['to'],
+            'offer': event['offer'],
+            'sessionId': event.get('sessionId'),
+        }))
 
-    def answer_handler(self , event):
-        typeof = event['typeof']
-        from_user = event['from']
-        to_user = event['to']
-        answer = event['answer']
-        self.send(
-            json.dumps({
-                'typeof':typeof,
-                'from':from_user,
-                'to':to_user,
-                'answer':answer
-            })
-        )
+    def answer_handler(self, event):
+        self.send(json.dumps({
+            'typeof': event['typeof'],
+            'from': event['from'],
+            'to': event['to'],
+            'answer': event['answer'],
+            'sessionId': event.get('sessionId'),
+        }))
 
-    def ice_handler(self , event):
-        typeof = event['typeof']
-        from_user = event['from']
-        to_user = event['to']
-        candidate = event['candidate']
-        self.send(
-            json.dumps({
-                'typeof':typeof,
-                'from':from_user,
-                'to':to_user,
-                'candidate':candidate
-            })
-        )
-    
-    def endcall_handler(self , event):
-        typeof = event['typeof']
-        from_user = event['from']
-        to_user = event['to']
-        self.send(
-            json.dumps({
-                'typeof':typeof,
-                'from':from_user,
-                'to':to_user,
-            })
-        )
+    def ice_handler(self, event):
+        self.send(json.dumps({
+            'typeof': event['typeof'],
+            'from': event['from'],
+            'to': event['to'],
+            'candidate': event['candidate'],
+            'sessionId': event.get('sessionId'),
+            'role': event.get('role'),
+        }))
+
+    def endcall_handler(self, event):
+        self.send(json.dumps({
+            'typeof': event['typeof'],
+            'from': event['from'],
+            'to': event['to'],
+            'sessionId': event.get('sessionId'),
+        }))
 
 
 
